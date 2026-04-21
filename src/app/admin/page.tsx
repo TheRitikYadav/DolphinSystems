@@ -12,18 +12,22 @@ import {
   LayoutDashboard,
   User,
   FileText,
+  RefreshCw,
+  Share2,
 } from "lucide-react";
 
 interface Counts {
   products: number;
   services: number;
   blog_posts: number;
+  redirects: number;
+  social_links: number;
 }
 
 export default function AdminDashboard() {
   const router = useRouter();
   const [user, setUser] = useState<{ email?: string } | null>(null);
-  const [counts, setCounts] = useState<Counts>({ products: 0, services: 0, blog_posts: 0 });
+  const [counts, setCounts] = useState<Counts>({ products: 0, services: 0, blog_posts: 0, redirects: 0, social_links: 0 });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,16 +37,20 @@ export default function AdminDashboard() {
       } = await supabase.auth.getUser();
       setUser(user);
 
-      const [{ count: pCount }, { count: sCount }, { count: bCount }] = await Promise.all([
+      const [{ count: pCount }, { count: sCount }, { count: bCount }, { count: rCount }, { count: socCount }] = await Promise.all([
         supabase.from("products").select("*", { count: "exact", head: true }),
         supabase.from("services").select("*", { count: "exact", head: true }),
         supabase.from("blog_posts").select("*", { count: "exact", head: true }),
+        supabase.from("redirects").select("*", { count: "exact", head: true }),
+        supabase.from("social_links").select("*", { count: "exact", head: true }),
       ]);
 
       setCounts({
         products: pCount ?? 0,
         services: sCount ?? 0,
         blog_posts: bCount ?? 0,
+        redirects: rCount ?? 0,
+        social_links: socCount ?? 0,
       });
       setLoading(false);
     }
@@ -132,6 +140,17 @@ export default function AdminDashboard() {
               </div>
             </div>
           </div>
+          <div className="rounded-2xl border border-border bg-white p-6 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-50">
+                <RefreshCw className="h-5 w-5 text-orange-600" />
+              </div>
+              <div>
+                <p className="text-sm text-muted">Redirects</p>
+                <p className="text-2xl font-bold text-navy">{counts.redirects}</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Quick Actions */}
@@ -195,6 +214,26 @@ export default function AdminDashboard() {
             <h4 className="mt-3 font-semibold text-navy">New Blog Post</h4>
             <p className="mt-1 text-sm text-muted">
               Write and publish a new post
+            </p>
+          </Link>
+          <Link
+            href="/admin/redirects"
+            className="group rounded-2xl border border-border bg-white p-6 shadow-sm transition-all hover:border-primary/30 hover:shadow-md"
+          >
+            <RefreshCw className="h-8 w-8 text-orange-600" />
+            <h4 className="mt-3 font-semibold text-navy">Manage Redirects</h4>
+            <p className="mt-1 text-sm text-muted">
+              Handle URL migrations
+            </p>
+          </Link>
+          <Link
+            href="/admin/redirects"
+            className="group rounded-2xl border border-border bg-white p-6 shadow-sm transition-all hover:border-primary/30 hover:shadow-md"
+          >
+            <Share2 className="h-8 w-8 text-pink-600" />
+            <h4 className="mt-3 font-semibold text-navy">Social Media</h4>
+            <p className="mt-1 text-sm text-muted">
+              Update platform links
             </p>
           </Link>
         </div>

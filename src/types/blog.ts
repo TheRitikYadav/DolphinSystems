@@ -19,3 +19,25 @@ export interface BlogPost {
   created_at: string;
   updated_at: string;
 }
+
+export interface Redirect {
+  id: string;
+  from_path: string;
+  to_url: string;
+  status_code: number;
+  is_active: boolean;
+  hits: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SocialLink {
+  id: string;
+  platform: string;
+  url: string;
+  icon: string;
+  is_active: boolean;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
+}

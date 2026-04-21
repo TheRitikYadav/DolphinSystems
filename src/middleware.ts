@@ -29,6 +29,24 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // --- Dynamic Redirects Logic ---
+  const { data: redirect } = await supabase
+    .from("redirects")
+    .select("to_url, status_code")
+    .eq("from_path", request.nextUrl.pathname)
+    .eq("is_active", true)
+    .single();
+
+  if (redirect) {
+    // Increment hits asynchronously (don't wait)
+    supabase
+      .rpc("increment_redirect_hits", { path: request.nextUrl.pathname })
+      .then(() => {});
+
+    return NextResponse.redirect(new URL(redirect.to_url, request.url), redirect.status_code);
+  }
+  // -------------------------------
+
   const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
   const isLoginRoute = request.nextUrl.pathname === "/admin/login";
 
