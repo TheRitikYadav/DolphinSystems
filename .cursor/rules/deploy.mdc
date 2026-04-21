@@ -1,0 +1,46 @@
+---
+description: How to deploy DolphinSystems.net to production
+globs:
+alwaysApply: true
+---
+
+# Deployment — DolphinSystems.net
+
+## Quick Deploy
+
+After making any code changes, deploy to production with:
+
+```bash
+npm run deploy
+```
+
+This single command builds, syncs to the Raspberry Pi, and restarts the server. The site goes live at https://dolphinsystems.net.
+
+## Architecture
+
+- **Hosting**: Raspberry Pi at `pi@ritik.local` (local network)
+- **Public access**: Cloudflare Tunnel exposes the Pi to the internet
+- **Domain**: dolphinsystems.net (DNS managed by Cloudflare)
+- **SSL**: Handled automatically by Cloudflare
+- **Stack on Pi**:
+  - `cloudflared` — tunnel service (systemd, auto-starts on boot)
+  - `nginx` — reverse proxy on port 80
+  - `PM2` + `Next.js standalone` — app server on port 3000
+  - Files live at `/var/www/dolphinsystems/`
+
+## Important Notes
+
+- `next.config.ts` must keep `output: "standalone"` — this is required for the deployment to work.
+- Environment variables (Supabase keys) are in `.env.local` and get synced to the Pi on every deploy.
+- After deploying, always confirm the site is live: `curl -s -o /dev/null -w "%{http_code}" https://dolphinsystems.net` should return `200`.
+- If the Pi is unreachable, make sure it's powered on and connected to the same network.
+
+## Troubleshooting on the Pi (via SSH)
+
+```bash
+ssh pi@ritik.local
+pm2 status                    # check if Next.js is running
+pm2 logs dolphinsystems       # view app logs
+sudo systemctl status cloudflared   # check tunnel
+sudo systemctl status nginx         # check nginx
+```

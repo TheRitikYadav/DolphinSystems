@@ -1,14 +1,20 @@
 {
-  "name": "dolphinsystems-temp",
+  "name": "dolphinsystems",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "deploy": "bash rebuild.sh"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.9.0",
+    "@supabase/supabase-js": "^2.98.0",
+    "@tailwindcss/typography": "^0.5.19",
+    "framer-motion": "^12.34.5",
+    "lucide-react": "^0.576.0",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"
