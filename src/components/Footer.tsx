@@ -65,9 +65,9 @@ export default function Footer() {
             <Link href="/" className="flex items-center gap-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/logo.svg"
+                src="/logo.png"
                 alt="DolphinSystems"
-                className="h-9 w-9"
+                className="h-10 w-auto"
               />
               <span className="text-lg font-bold text-white">
                 Dolphin<span className="text-primary">Systems</span>
