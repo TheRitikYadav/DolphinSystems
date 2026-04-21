@@ -151,6 +151,17 @@ export default function AdminDashboard() {
               </div>
             </div>
           </div>
+          <div className="rounded-2xl border border-border bg-white p-6 shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-pink-50">
+                <Share2 className="h-5 w-5 text-pink-600" />
+              </div>
+              <div>
+                <p className="text-sm text-muted">Social Links</p>
+                <p className="text-2xl font-bold text-navy">{counts.social_links}</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Quick Actions */}
