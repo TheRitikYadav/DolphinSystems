@@ -5,6 +5,8 @@ import { createSupabaseServerClient } from "@/lib/supabase-server";
 import type { BlogPost } from "@/types/blog";
 import type { Metadata } from "next";
 
+import ShareButtons from "@/components/ShareButtons";
+
 async function getPost(slug: string): Promise<BlogPost | null> {
   const supabase = await createSupabaseServerClient();
   const { data } = await supabase
@@ -157,13 +159,19 @@ export default async function BlogPostPage({
 
       {/* Content */}
       <article className="mx-auto max-w-4xl px-4 py-16 sm:px-6">
-        <Link
-          href="/blog"
-          className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-primary"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Blog
-        </Link>
+        <div className="mb-8 flex flex-wrap items-center justify-between gap-6">
+          <Link
+            href="/blog"
+            className="inline-flex items-center gap-2 text-sm font-medium text-muted transition-colors hover:text-primary"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Blog
+          </Link>
+          <ShareButtons
+            url={`https://dolphinsystems.net/blog/${post.slug}`}
+            title={post.title}
+          />
+        </div>
 
         {post.excerpt && (
           <p className="mb-8 text-lg leading-relaxed text-muted italic border-l-4 border-primary/30 pl-4">
